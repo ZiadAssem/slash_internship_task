@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:slash_internship_task/view/reusable_widgets.dart';
@@ -15,8 +17,8 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   int _currentIndex = 0;
-    int carouselIndex = 0;
-
+  int carouselIndex = 0;
+  CarouselController _carouselController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +38,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         children: [
           SizedBox(height: MediaQuery.of(context).size.height * 0.1),
           // Display the product image
-          _buildProductImagesCarousel(currentIndex),
-          SizedBox(height: 16),
-                    _buildMiniImagesRow(),
-
+          _buildFullCarousel(currentIndex),
 
           // Display other product details using ListView.builder
           ListView.builder(
@@ -71,87 +70,132 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-Widget _buildProductImagesCarousel(int index) {
-  final List<NetworkImage> images = [];
+  Widget _buildFullCarousel(index) {
+    final List<NetworkImage> images = [];
 
-  // Ensure that the index is within bounds
-  if (index >= 0 && index < widget.product.variations.length) {
-    for (var i = 0; i < widget.product.variations[index].productVariantImages.length; i++) {
-      images.add(NetworkImage(widget.product.variations[index].productVariantImages[i]));
+    // Ensure that the index is within bounds
+    if (index >= 0 && index < widget.product.variations.length) {
+      for (var i = 0;
+          i < widget.product.variations[index].productVariantImages.length;
+          i++) {
+        images.add(NetworkImage(
+            widget.product.variations[index].productVariantImages[i]));
+      }
     }
+    return Column(
+      children: [
+        _buildProductImagesCarousel(images),
+        SizedBox(height: 16),
+        _buildMiniImagesRow(images),
+      ],
+    );
   }
 
-  return CarouselSlider(
-    options: CarouselOptions(
-      height: MediaQuery.of(context).size.width * 0.8,
-      aspectRatio: 1 / 1,
-      viewportFraction: 0.8,
-      initialPage: 0,
-      enableInfiniteScroll: true,
-      reverse: false,
-      enlargeCenterPage: true,
-      scrollDirection: Axis.horizontal,
-      onPageChanged: (newIndex, reason) {
-        setState(() {
-          carouselIndex = newIndex;
-        });
-      },
-    ),
-    items: images.map((image) {
-      return Builder(
-        builder: (BuildContext context) {
-          return Container(
-            height: 100,
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.symmetric(horizontal: 10.0),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: Image(
-                image: image,
-                fit: BoxFit.cover,
-              ),
-            ),
-          );
-        },
-      );
-    }).toList(),
-  );
-}
-
-  Widget _buildMiniImagesRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        widget.product.variations[_currentIndex].productVariantImages.length,
-        (index) {
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                carouselIndex = index;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.all(8.0),
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                border: Border.all(
-                  color: carouselIndex == index ? Colors.blue : Colors.grey,
-                  width: 2.0,
-                ),
-              ),
-              child: Image.network(
-                widget.product.variations[_currentIndex].productVariantImages[index],
-                fit: BoxFit.cover,
-              ),
-            ),
-          );
+  Widget _buildProductImagesCarousel(List<NetworkImage> images) {
+    return CarouselSlider(
+      carouselController: _carouselController,
+      options: CarouselOptions(
+        height: MediaQuery.of(context).size.width * 0.8,
+        aspectRatio: 1 / 1,
+        viewportFraction: 0.8,
+        initialPage: 0,
+        enableInfiniteScroll: true,
+        reverse: false,
+        enlargeCenterPage: true,
+        scrollDirection: Axis.horizontal,
+        onPageChanged: (newIndex, reason) {
+          setState(() {
+            carouselIndex = newIndex;
+          });
         },
       ),
+      items: images.map((image) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              height: 100,
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(horizontal: 10.0),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Image(
+                  image: image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+          },
+        );
+      }).toList(),
     );
+  }
+
+  Widget _buildMiniImagesRow(List<NetworkImage>  images) {
+    return SizedBox(height: 50,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  carouselIndex = index;
+                  _carouselController.animateToPage(carouselIndex);
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.all(8.0),
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: carouselIndex == index ? Colors.blue : Colors.grey,
+                    width: 2.0,
+                  ),
+                ),
+                child: Image(image: images[index],
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+          },
+          itemCount: images.length),
+    );
+
+    // Row(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: List.generate(
+    //     widget.product.variations[_currentIndex].productVariantImages.length,
+    //     (index) {
+    //       return GestureDetector(
+    //         onTap: () {
+    //           setState(() {
+    //             carouselIndex = index;
+    //           });
+    //         },
+    //         child: Container(
+    //           margin: EdgeInsets.all(8.0),
+    //           height: 50,
+    //           width: 50,
+    //           decoration: BoxDecoration(
+    //             borderRadius: BorderRadius.circular(8.0),
+    //             border: Border.all(
+    //               color: carouselIndex == index ? Colors.blue : Colors.grey,
+    //               width: 2.0,
+    //             ),
+    //           ),
+    //           child: Image.network(
+    //             widget.product.variations[_currentIndex]
+    //                 .productVariantImages[index],
+    //             fit: BoxFit.cover,
+    //           ),
+    //         ),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 }
