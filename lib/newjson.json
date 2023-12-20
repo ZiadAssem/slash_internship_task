@@ -1,0 +1,35 @@
+{
+    "id": 22,
+    "name": "Wall painting",
+    "description": "Warm and calming wall painting",
+    "brand_id": 4,
+    "product_rating": 0,
+    "variations": [
+        {
+            "id": 68,
+            "price": 1010,
+            "quantity": 1,
+            "inStock": true,
+            "ProductVarientImages": [
+                {
+                    "id": 127,
+                    "image_path": "https://firebasestorage.googleapis.com/v0/b/slash-f711b.appspot.com/o/images%2Fproduct-variants%2F1702842151610image_picker_2D257B4C-6500-4BB9-ADAD-BA7594B78586-7089-000008B2B1A54B9E.jpg?alt=media&token=4cad311e-9cbe-4191-95aa-e61b651bcbdc",
+                    "product_varient_id": null,
+                    "createdAt": "2023-12-17T19:42:33.844Z",
+                    "updatedAt": "2023-12-17T19:42:33.844Z"
+                },
+                {
+                    "id": 128,
+                    "image_path": "https://firebasestorage.googleapis.com/v0/b/slash-f711b.appspot.com/o/images%2Fproduct-variants%2F1702842151623image_picker_55240B63-8841-4763-BDDE-97BF9FE7E414-7089-000008B2B423465A.jpg?alt=media&token=5ba71fbc-fbad-4550-b2cc-b050f8701dff",
+                    "product_varient_id": null,
+                    "createdAt": "2023-12-17T19:42:33.844Z",
+                    "updatedAt": "2023-12-17T19:42:33.844Z"
+                }
+            ],
+            "productPropertiesValues": []
+        }
+    ],
+    "avaiableProperties": [],
+    "brandName": "Interns",
+    "brandImage": "https://firebasestorage.googleapis.com/v0/b/slash-f711b.appspot.com/o/images%2Fbrands%2F1702834720203image_picker_D2A78E9A-EC1F-438C-83C6-AD5011B25C73-7089-00000892F07CC209.png?alt=media&token=5e5c9cc5-e896-4dc9-bed8-56126195f112"
+}
