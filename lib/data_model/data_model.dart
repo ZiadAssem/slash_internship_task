@@ -14,16 +14,36 @@ class DataModel {
         debugPrint('Request successful');
         List<Product> products = [];
 
-         for (var productData in response.data['data']) {
-          products.add(Product.fromJson(productData));
+        for (var productData in response.data['data']) {
+
+          try {
+            final productId = productData['id'];
+            print('Fetching product details for ID: $productId');
+            final productResponse = await dio.get('$apiUrl/$productId');
+
+            if (productResponse.statusCode == 200) {
+              print(productResponse);
+              final productDetails = productResponse.data['data'];
+              print(productDetails);
+              final Product product = Product.fromJson(productDetails);
+              print('Product added');
+              products.add(product);
+
+            }
+          } catch (e) {
+            print('Error fetching product details: $e');
+          }
          }
+
         return products;
+      } else {
+        debugPrint('Request failed');
+        throw Exception('Failed to load products');
       }
-      }
-    catch (e) {
-      debugPrint('Request failed with error: $e');
-      return [];
+    } on Exception catch (e) {
+      debugPrint('Exception: ${e.toString()}');
+      // Handle other exceptions
+      throw Exception('Failed to load products: $e');
     }
-    return [];
   }
 }

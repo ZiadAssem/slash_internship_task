@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:slash_internship_task/view/reusable_widgets.dart';
 
 import '../classes/product_class.dart';
 import '../data_model/data_model.dart';
+import 'product_details.dart';
 
 class ViewProducts extends StatefulWidget {
   const ViewProducts({super.key});
@@ -13,25 +15,9 @@ class ViewProducts extends StatefulWidget {
 class _ViewProductsState extends State<ViewProducts> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(
-        //set title to be in middle
-        centerTitle: true,
-        backgroundColor: Colors.black,
-        title: Text('Slash.',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-        
-        ),
-      ),
-      backgroundColor: Colors.black,
-      body: _productsGrid(),
-    );
+    return reusableScaffold(_productsGrid(),'Slash.',(){});
   }
-  
+
   Widget _productsGrid() {
     return FutureBuilder(
       future: DataModel().fetchAllProducts(),
@@ -68,36 +54,87 @@ class _ViewProductsState extends State<ViewProducts> {
       },
     );
   }
-  
+
   Widget _productCard(Product product) {
+    final size = MediaQuery.of(context).size.width * 0.4;
+    print('IMAGE: ${product.variations[0].productVariantImages[0]}');
     return Card(
+      color: Colors.transparent,
       child: Column(
         //Product image
         children: [
-          // Expanded(
-          //   child: Image.network(
-          //     product.variations[0].productVariantImages[0],
-          //     fit: BoxFit.cover,
-          //   ),
-          // ),
-          // //Product name
-          // Text(
-          //   product.name,
-          //   style: const TextStyle(
-          //     fontSize: 16,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
-          //Product price
-          Text(
-            'Rs. ${product.variations[0].price}',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          _buildProductImage(product, size),
+          //Product name
+          _buildProductNameRow(product),
+          _buildProductPriceRow(product),
         ],
       ),
     );
+  }
+
+  _buildProductImage(Product product, size) {
+    final image = NetworkImage(product.variations[0].productVariantImages[0]);
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetails(product: product,)));
+
+      },
+      child: Container(
+        
+        height: size,
+        width: size,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          image: DecorationImage(
+            image: image,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildProductNameRow(Product product) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text(
+          '${product.brandName} - ${product.name}',
+          style: _detailsTextStyle(),
+          textAlign: TextAlign.left,
+        ),
+        Container(
+          height: 30,
+          width: 30,
+          child: ClipOval(
+            child: Image.network(product.brandLogoUrl!),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _buildProductPriceRow(Product product) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'EGP ${product.variations[0].price}',
+          style: _detailsTextStyle(),
+        ),
+        IconButton(
+            onPressed: () {},
+            icon: Icon(color: Colors.white, Icons.favorite_border)),
+        IconButton(
+            onPressed: () {},
+            icon: Icon(color: Colors.grey, Icons.shopping_cart))
+      ],
+    );
+  }
+
+  TextStyle _detailsTextStyle() {
+    return const TextStyle(
+        fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white);
   }
 }

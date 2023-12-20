@@ -55,10 +55,13 @@ class ProductVariation {
     List<String> productVariantImages = [];
 
     if (json['productPropertiesValues'] != null) {
+      print(json['productPropertiesValues']==null);
       propertiesValues = (json['productPropertiesValues'] as List<dynamic>?)
           ?.map<ProductPropertyAndValue>(
               (property) => ProductPropertyAndValue.fromJson(property))
           .toList() ?? [];
+      print(propertiesValues);
+      print('succes 1');
     } else {
       print('Warning: ProductPropertiesValues list is null.');
     }
@@ -67,6 +70,8 @@ class ProductVariation {
       productVariantImages = (json['ProductVarientImages'] as List<dynamic>?)
           ?.map<String>((image) => image['image_path'] as String)
           .toList() ?? [];
+      print(productVariantImages);
+      print('succes 2');
     } else {
       print('Warning: ProductVarientImages list is null.');
     }
@@ -81,7 +86,7 @@ class ProductVariation {
       id: json['id'],
       productId: productId,
       price: json['price'],
-      quantity: json['quantity'] as int,
+      quantity: json['quantity'] ,
       inStock: json['inStock'] ?? false,
       productVariantImages: productVariantImages,
       productPropertiesValues: propertiesValues,

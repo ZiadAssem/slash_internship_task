@@ -78,7 +78,7 @@ class Product {
       brandId: json['brand_id'],
       brandName: json['brandName'],
       brandLogoUrl: json['brandImage'],
-      rating: json['product_rating'],
+      rating: json['product_rating'].toDouble(),
       variations: variations,
       availableProperties: availableProperties,
     );
