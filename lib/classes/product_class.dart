@@ -1,5 +1,7 @@
-import 'product_variation_class.dart';
 import 'product_property_and_value_class.dart';
+import 'product_variation_class.dart';
+
+// product.dart
 
 class Product {
   final int id;
@@ -10,8 +12,7 @@ class Product {
   final String? brandLogoUrl;
   final double rating;
   final List<ProductVariation> variations;
-  final List<ProductPropertyAndValue>
-      availableProperties; //What properties are offered //(multiple colors or non, multiple sizes or non, materials)
+  final List<ProductPropertyAndValue> availableProperties;
 
   Product({
     required this.id,
@@ -26,22 +27,50 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    List<ProductPropertyAndValue> availableProperties = [];
-    List<ProductVariation> variations =[];
-    if(json['available_properties'] != null) {
-     availableProperties =json['available_properties']
-          .map<ProductPropertyAndValue>(
-              (property) => ProductPropertyAndValue.fromJson(property))
-          .toList();
-    }
-    
-    if(json['variations'] != null) {
-      variations =json['variations']
-          .map<ProductVariation>(
-              (variation) => ProductVariation.fromJson(variation, json['id']))
-          .toList();
+    if (json['id'] == null) {
+      print('id is null');
+    } else if (json['name'] == null) {
+      print('name is null');
+    } else if (json['description'] == null) {
+      print('description is null');
+    } else if (json['brand_id'] == null) {
+      print('brand_id is null');
+    } else if (json['brandName'] == null) {
+      print('brandName is null');
+    } else if (json['brandImage'] == null) {
+      print('brandImage is null');
+    } else if (json['product_rating'] == null) {
+      print('product_rating is null');
+    } else if (json['variations'] == null) {
+      print('variations is null');
+    } else if (json['avaiableProperties'] == null) {
+      print('availableProperties is null');
+    } else {
+      print('all is well 1');
     }
 
+    List<ProductVariation> variations = [];
+    List<ProductPropertyAndValue> availableProperties = [];
+
+    if (json['variations'] != null) {
+      variations = (json['variations'] as List<dynamic>?)
+              ?.map<ProductVariation>((variation) =>
+                  ProductVariation.fromJson(variation, json['id']))
+              .toList() ??
+          [];
+    } else {
+      print('Warning: Variations list is null.');
+    }
+
+    if (json['avaiableProperties'] != null) {
+      availableProperties = (json['avaiableProperties'] as List<dynamic>?)
+              ?.map<ProductPropertyAndValue>(
+                  (property) => ProductPropertyAndValue.fromJson(property))
+              .toList() ??
+          [];
+    } else {
+      print('Warning: AvailableProperties list is null.');
+    }
     return Product(
       id: json['id'],
       name: json['name'],
@@ -50,10 +79,8 @@ class Product {
       brandName: json['brandName'],
       brandLogoUrl: json['brandImage'],
       rating: json['product_rating'],
-      variations:variations,
-      availableProperties:availableProperties ,
+      variations: variations,
+      availableProperties: availableProperties,
     );
-
-    
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'data_model/data_model.dart';
+import 'view/products.dart';
 
 void main() async{
   DataModel model = DataModel();
@@ -15,12 +16,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return  MaterialApp(
+      home:Container(),
+      // ViewProducts(),
     );
   }
 }

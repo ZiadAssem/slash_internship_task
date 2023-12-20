@@ -1,3 +1,4 @@
+// product_variation.dart
 import 'product_property_and_value_class.dart';
 
 class ProductVariation {
@@ -5,7 +6,7 @@ class ProductVariation {
   final int productId;
   final num price;
   final int quantity;
-  bool inStock; //to enable/disable addToCart button
+  bool inStock; // to enable/disable addToCart button
   final List<String> productVariantImages;
   final List<ProductPropertyAndValue> productPropertiesValues;
 
@@ -20,33 +21,70 @@ class ProductVariation {
   });
 
   factory ProductVariation.fromJson(Map<String, dynamic> json, int productId) {
- List<ProductPropertyAndValue> propertiesValues = [];
- List<String> productVariantImages = [];
-  if (json['productPropertiesValues'] != null) {
-    propertiesValues = (json['productPropertiesValues'] as List<dynamic>)
-        .map<ProductPropertyAndValue>(
-            (property) => ProductPropertyAndValue.fromJson(property))
-        .toList();
-  }
-  if (json['ProductVarientImages'] != null) {
-    productVariantImages = (json['ProductVarientImages'] as List<dynamic>)
-        .map<String>((image) => image['image_path'] as String)
-        .toList();
-  }
-  // Find the specific variation in the variations array
-  Map<String, dynamic> variationJson = (json['variations'] as List<dynamic>)
-      .firstWhere(
-        (variation) => variation['id'] == json['id'],
-        orElse: () => Map<String, dynamic>(),
-      );
+    if(json['id'] == null){
+      print('id is null');
+    }else
+    if(json['price'] == null){
+      print('price is null');
+    }else
+    if(json['quantity'] == null){
+      print('quantity is null');
+    }else
+    if(json['inStock'] == null){
+      print('inStock is null');
+    }else
+    if(json['ProductVarientImages'] == null){
+      print('ProductVarientImages is null');
+    }else
+    if(json['productPropertiesValues'] == null){
+      print('productPropertiesValues is null');
+    }else
+    
+    {
+      print('all is well 2');
+    }
+   
 
-  return ProductVariation(
-    id: json['id'],
-    productId: productId,
-    price: variationJson['price'],
-    quantity: variationJson['quantity'] as int,
-    inStock: variationJson['inStock'] ?? false,
-    productVariantImages: productVariantImages,
-    productPropertiesValues: propertiesValues,
-  );  }
+
+
+
+
+
+
+   List<ProductPropertyAndValue> propertiesValues = [];
+    List<String> productVariantImages = [];
+
+    if (json['productPropertiesValues'] != null) {
+      propertiesValues = (json['productPropertiesValues'] as List<dynamic>?)
+          ?.map<ProductPropertyAndValue>(
+              (property) => ProductPropertyAndValue.fromJson(property))
+          .toList() ?? [];
+    } else {
+      print('Warning: ProductPropertiesValues list is null.');
+    }
+
+    if (json['ProductVarientImages'] != null) {
+      productVariantImages = (json['ProductVarientImages'] as List<dynamic>?)
+          ?.map<String>((image) => image['image_path'] as String)
+          .toList() ?? [];
+    } else {
+      print('Warning: ProductVarientImages list is null.');
+    }
+    // Find the specific variation in the variations array
+    // Map<String, dynamic> variationJson = (json['variations'] as List<dynamic>)
+    //     .firstWhere(
+    //       (variation) => variation['id'] == json['id'],
+    //       orElse: () => Map<String, dynamic>(),
+    //     );
+
+    return ProductVariation(
+      id: json['id'],
+      productId: productId,
+      price: json['price'],
+      quantity: json['quantity'] as int,
+      inStock: json['inStock'] ?? false,
+      productVariantImages: productVariantImages,
+      productPropertiesValues: propertiesValues,
+    );
+  }
 }

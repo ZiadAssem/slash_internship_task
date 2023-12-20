@@ -1,8 +1,7 @@
+// product_property_and_value.dart
 class ProductPropertyAndValue {
-  final String property; //color, or size, or material
-  final String
-      value; //if property is color, value may be: #008000(hex for Green)
-  //if property is size, value may be: XL
+  final String property;
+  final String value;
 
   ProductPropertyAndValue({
     required this.property,
@@ -10,10 +9,17 @@ class ProductPropertyAndValue {
   });
 
   factory ProductPropertyAndValue.fromJson(Map<String, dynamic> json) {
+    if(json['property'] == null){
+      print('property is null');
+    } else
+    if(json['value'] == null){
+      print('value is null');
+    } else{
+      print('all is well 3');
+    }
     return ProductPropertyAndValue(
       property: json['property'],
       value: json['value'],
     );
   }
-
 }
