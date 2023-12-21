@@ -1,3 +1,5 @@
+import 'package:slash_internship_task/classes/available_properties_class.dart';
+
 import 'product_property_and_value_class.dart';
 import 'product_variation_class.dart';
 
@@ -12,7 +14,7 @@ class Product {
   final String? brandLogoUrl;
   final double rating;
   final List<ProductVariation> variations;
-  final List<ProductPropertyAndValue> availableProperties;
+  final List<AvailableProperties> availableProperties;
 
   Product({
     required this.id,
@@ -50,7 +52,7 @@ class Product {
     }
 
     List<ProductVariation> variations = [];
-    List<ProductPropertyAndValue> availableProperties = [];
+    List<AvailableProperties> availableProperties = [];
 
     if (json['variations'] != null) {
       variations = (json['variations'] as List<dynamic>?)
@@ -63,13 +65,10 @@ class Product {
     }
 
     if (json['avaiableProperties'] != null) {
-      availableProperties = (json['avaiableProperties'] as List<dynamic>?)
-              ?.map<ProductPropertyAndValue>(
-                  (property) => ProductPropertyAndValue.fromJson(property))
-              .toList() ??
-          [];
-    } else {
-      print('Warning: AvailableProperties list is null.');
+      availableProperties = (json['avaiableProperties'] as List<dynamic>)
+          .map<AvailableProperties>(
+              (property) => AvailableProperties.fromJson(property))
+          .toList();
     }
     return Product(
       id: json['id'],

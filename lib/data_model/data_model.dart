@@ -27,6 +27,15 @@ class DataModel {
               print(productDetails);
               final Product product = Product.fromJson(productDetails);
               print('Product added');
+              if(product.availableProperties.isEmpty){
+                print('property is null');
+              } else{
+                print("Begin Testing properties");
+              print(product.availableProperties[0].property);
+              print(product.availableProperties[0].values[0]);
+              print("End Testing properties");
+              }
+
               products.add(product);
 
             }
