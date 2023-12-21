@@ -72,6 +72,13 @@ class _ProductDetailsState extends State<ProductDetails> {
           _properties['Color'] != null
               ? _buildColorRow(_properties['Color']!)
               : Container(),
+          _properties['Size'] != null
+              ? _buildSizeDetails(_properties['Size']!)
+              : Container(),
+
+          _properties['Material'] != null
+              ? _buildMaterialButtons()
+              : Container(),
 
           SizedBox(height: 16),
           _displayDescriptionExpansionPanel(),
@@ -129,19 +136,30 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget _buildSizeDetails() {
+  Widget _buildSizeDetails(Size) {
     return Container(
       height: 100,
-      child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Select Size',
-                style: TextStyle(color: Colors.white, fontSize: 20)),
-            Text('Size Chart'),
-          ],
-        ),
-      ]),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Select Size',
+                  style: TextStyle(color: Colors.white, fontSize: 20)),
+              Text('Size Chart'),
+            ],
+          ),
+          ListView.builder(
+            itemBuilder: ((context, index) {
+              return ElevatedButton(
+                child: Text(Size[index]),
+                onPressed: () {},
+              );
+            }),
+            itemCount: Size.length,
+          )
+        ],
+      ),
     );
   }
 
@@ -284,7 +302,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                   //         (propertyValue) =>
                   //             propertyValue.value == color[index]));
                   productVariation = widget.product.variations.firstWhere(
-                    (variation) => variation.id == colorId,);
+                    (variation) => variation.id == colorId,
+                  );
                   print('NEW PRODUCT VARIATION: ${colorId}');
                   print(productVariation.productVariantImages[0]);
                 });
@@ -351,4 +370,6 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
     );
   }
+
+  _buildMaterialButtons() {}
 }
