@@ -1,9 +1,7 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:slash_internship_task/classes/available_properties_class.dart';
-import 'package:slash_internship_task/classes/product_property_and_value_class.dart';
 import 'package:slash_internship_task/classes/product_variation_class.dart';
 import 'package:slash_internship_task/view/reusable_widgets.dart';
 
@@ -64,11 +62,11 @@ class _ProductDetailsState extends State<ProductDetails> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.1),
           // Display the product image
           _buildFullCarousel(currentIndex),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           _displayNameRow(),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           _displayPriceRow(),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           _properties['Color'] != null
               ? _buildColorRow(_properties['Color']!)
@@ -79,7 +77,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ? _buildMaterialDetails()
               : Container(),
 
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           _displayDescriptionExpansionPanel(),
 
           // Display other product details using ListView.builder
@@ -102,7 +100,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Container(
+        SizedBox(
           height: 50,
           width: 50,
           child: ClipOval(
@@ -136,26 +134,16 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   Widget _buildSizeDetails() {
-    // adds all sizes in this variant to a list
-
-    // Assuming productVariation is your ProductVariation instance
     List<String> size = productVariation.productPropertiesValues
         .where((propertyValue) => propertyValue.property == 'Size')
         .map((propertyValue) => propertyValue.value)
         .toList();
-    productVariation.productPropertiesValues.forEach((propertyValue) {
-      print(
-          'Property: ${propertyValue.property}, Value: ${propertyValue.value}');
-    });
 
-// Now, sizes contains all size values for the 'Size' property
-    print("Sizes: $size");
-
-    return Container(
+    return SizedBox(
       height: 100,
       child: Column(
         children: [
-          Row(
+         const  Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Select Size',
@@ -163,7 +151,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               Text('Size Chart'),
             ],
           ),
-          Container(
+          SizedBox(
             height: 50,
             child: ListView.builder(
               shrinkWrap: true,
@@ -215,7 +203,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Column(
       children: [
         _buildProductImagesCarousel(images),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Center(child: _buildMiniImagesRow(images)),
       ],
     );
@@ -245,8 +233,8 @@ class _ProductDetailsState extends State<ProductDetails> {
             return Container(
               height: 100,
               width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.symmetric(horizontal: 10.0),
-              decoration: BoxDecoration(
+              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+              decoration: const BoxDecoration(
                 color: Colors.transparent,
               ),
               child: ClipRRect(
@@ -278,7 +266,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 });
               },
               child: Container(
-                margin: EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(8.0),
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
@@ -301,7 +289,6 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   Widget _buildColorRow(List<String> colors) {
     colors = colors.toSet().toList();
-    print('Colors are $colors');
 
     return Container(
       alignment: AlignmentDirectional.center,
@@ -337,9 +324,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                 productVariation = widget.product.variations.firstWhere(
                   (variation) => variation.id == colorId,
                 );
-
-                print('NEW PRODUCT VARIATION: ${colorId}');
-                print(productVariation.productVariantImages[0]);
               });
             },
             child: Stack(
@@ -356,7 +340,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.all(2.5),
+                  margin: const EdgeInsets.all(2.5),
                   height: 25,
                   width: 25,
                   decoration: BoxDecoration(
@@ -378,7 +362,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: ExpansionPanelList(
-          expandedHeaderPadding: EdgeInsets.all(10),
+          expandedHeaderPadding: const EdgeInsets.all(10),
           expansionCallback: (panelIndex, isExpanded) {
             setState(() {
               _isExpandedValue = isExpanded;
@@ -387,15 +371,15 @@ class _ProductDetailsState extends State<ProductDetails> {
           children: [
             ExpansionPanel(
               headerBuilder: (context, isExpanded) {
-                return ListTile(
+                return const ListTile(
                   title: Text('DESCRIPTION'),
                 );
               },
               body: Padding(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 30),
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
                 child: Text(
                   widget.product.description,
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                 ),
               ),
               isExpanded: _isExpandedValue,
@@ -414,28 +398,22 @@ class _ProductDetailsState extends State<ProductDetails> {
         .where((propertyValue) => propertyValue.property == 'Materials')
         .map((propertyValue) => propertyValue.value)
         .toList();
-    productVariation.productPropertiesValues.forEach((propertyValue) {
-      print(
-          'Property: ${propertyValue.property}, Value: ${propertyValue.value}');
-    });
 
 // Now, sizes contains all size values for the 'Size' property
 
-    return Container(
+    return SizedBox(
       height: 100,
-      
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(
+          const Text(
             'Select Material',
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           Center(
-            child: Container(
+            child: SizedBox(
               height: 50,
               child: ListView.builder(
-                
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: ((context, index) {
@@ -455,9 +433,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           orElse: () => PropertyValue(
                               value: "", id: -1), // Default values if not found
                         );
-          
+
                         int materialId = materialPropertyValue.id;
-          
+
                         productVariation = widget.product.variations.firstWhere(
                           (variation) => variation.id == materialId,
                         );

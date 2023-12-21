@@ -9,21 +9,9 @@ class ProductPropertyAndValue {
   });
 
   factory ProductPropertyAndValue.fromJson(Map<String, dynamic> json) {
-    print('test');
-    print('property: ${json['property']}');
-    print('value: ${json['value']}');
-    if(json['property'] == null){
-      print('property is null');
-    } else
-    if(json['value'] == null){
-      print('value is null');
-    } else{
-      print('all is well 3');
-    }
-
-    String value='';
-    if(json['value']!=null){
-      value=json['value'];
+    String value = '';
+    if (json['value'] != null) {
+      value = json['value'];
     }
     return ProductPropertyAndValue(
       property: json['property'],

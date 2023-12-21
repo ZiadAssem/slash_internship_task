@@ -34,8 +34,7 @@ class _ViewProductsState extends State<ViewProducts> {
               mainAxisSpacing: 10,
             ),
             itemBuilder: (context, index) {
-              print('test');
-              print('name is ${products}');
+
               return _productCard(products[index]);
             },
           );
@@ -57,7 +56,6 @@ class _ViewProductsState extends State<ViewProducts> {
 
   Widget _productCard(Product product) {
     final size = MediaQuery.of(context).size.width * 0.4;
-    print('IMAGE: ${product.variations[0].productVariantImages[0]}');
     return Card(
       color: Colors.transparent,
       child: Column(
@@ -75,7 +73,8 @@ class _ViewProductsState extends State<ViewProducts> {
   _buildProductImage(Product product, size) {
     final image = NetworkImage(product.variations[0].productVariantImages[0]);
     return GestureDetector(
-      onTap: (){
+      onTap: ()async{
+        product = await DataModel().fetchProductDetails(product.id);
         Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetails(product: product,)));
 
       },
@@ -125,10 +124,10 @@ class _ViewProductsState extends State<ViewProducts> {
         ),
         IconButton(
             onPressed: () {},
-            icon: Icon(color: Colors.white, Icons.favorite_border)),
+            icon: const Icon(color: Colors.white, Icons.favorite_border)),
         IconButton(
             onPressed: () {},
-            icon: Icon(color: Colors.grey, Icons.shopping_cart))
+            icon: const Icon(color: Colors.grey, Icons.shopping_cart))
       ],
     );
   }
