@@ -6,7 +6,7 @@ Widget reusableScaffold(body,title,Function backFn){
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            backFn;
+            backFn();
           },
         ),
         //set title to be in middle

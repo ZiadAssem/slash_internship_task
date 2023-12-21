@@ -73,12 +73,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           _properties['Color'] != null
               ? _buildColorRow(_properties['Color']!)
               : Container(),
-          _properties['Size'] != null
-              ? _buildSizeDetails()
-              : Container(),
+          _properties['Size'] != null ? _buildSizeDetails() : Container(),
 
-          _properties['Material'] != null
-              ? _buildMaterialButtons()
+          _properties['Materials'] != null
+              ? _buildMaterialDetails()
               : Container(),
 
           SizedBox(height: 16),
@@ -139,18 +137,19 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   Widget _buildSizeDetails() {
     // adds all sizes in this variant to a list
-   
-  // Assuming productVariation is your ProductVariation instance
-List<String> size = productVariation.productPropertiesValues
-    .where((propertyValue) => propertyValue.property == 'Size')
-    .map((propertyValue) => propertyValue.value)
-    .toList();
+
+    // Assuming productVariation is your ProductVariation instance
+    List<String> size = productVariation.productPropertiesValues
+        .where((propertyValue) => propertyValue.property == 'Size')
+        .map((propertyValue) => propertyValue.value)
+        .toList();
     productVariation.productPropertiesValues.forEach((propertyValue) {
-  print('Property: ${propertyValue.property}, Value: ${propertyValue.value}');
-});
+      print(
+          'Property: ${propertyValue.property}, Value: ${propertyValue.value}');
+    });
 
 // Now, sizes contains all size values for the 'Size' property
-print("Sizes: $size");
+    print("Sizes: $size");
 
     return Container(
       height: 100,
@@ -165,41 +164,34 @@ print("Sizes: $size");
             ],
           ),
           Container(
-
             height: 50,
             child: ListView.builder(
-              
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemBuilder: ((context, index) {
                 return ElevatedButton(
                   child: Text(size[index]),
                   onPressed: () {
-          
                     setState(() {
-                      
-          
-                       AvailableProperties sizeProperty =
-                        widget.product.availableProperties.firstWhere(
-                      (property) => property.property == "Size",
-                      orElse: () => AvailableProperties(property: "", values: []),
-                    );
+                      AvailableProperties sizeProperty =
+                          widget.product.availableProperties.firstWhere(
+                        (property) => property.property == "Size",
+                        orElse: () =>
+                            AvailableProperties(property: "", values: []),
+                      );
                       PropertyValue sizePropertyValue =
-                        sizeProperty.values.firstWhere(
-                      (value) => value.value == size[index],
-                      orElse: () => PropertyValue(
-                          value: "", id: -1), // Default values if not found
-                    );
-          
+                          sizeProperty.values.firstWhere(
+                        (value) => value.value == size[index],
+                        orElse: () => PropertyValue(
+                            value: "", id: -1), // Default values if not found
+                      );
+
                       int sizeId = sizePropertyValue.id;
-          
-                    productVariation = widget.product.variations.firstWhere(
-                      (variation) => variation.id == sizeId,
-                    );
-          
-          
+
+                      productVariation = widget.product.variations.firstWhere(
+                        (variation) => variation.id == sizeId,
+                      );
                     });
-          
                   },
                 );
               }),
@@ -307,76 +299,78 @@ print("Sizes: $size");
     );
   }
 
-Widget _buildColorRow(List<String> colors) {
-  colors = colors.toSet().toList();
-  print('Colors are $colors');
+  Widget _buildColorRow(List<String> colors) {
+    colors = colors.toSet().toList();
+    print('Colors are $colors');
 
-  return Container(
-    alignment: AlignmentDirectional.center,
-    height: 50,
-    child: ListView.builder(
-      shrinkWrap: true,
-      scrollDirection: Axis.horizontal,
-      itemCount: colors.length,
-      itemBuilder: (context, index) {
-        String color = 'FF${colors[index]}';
-        color = color.replaceAll('#', '');
+    return Container(
+      alignment: AlignmentDirectional.center,
+      height: 50,
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: colors.length,
+        itemBuilder: (context, index) {
+          String color = 'FF${colors[index]}';
+          color = color.replaceAll('#', '');
 
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              AvailableProperties colorProperty = widget.product.availableProperties.firstWhere(
-                (property) => property.property == "Color",
-                orElse: () => AvailableProperties(property: "", values: []),
-              );
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                AvailableProperties colorProperty =
+                    widget.product.availableProperties.firstWhere(
+                  (property) => property.property == "Color",
+                  orElse: () => AvailableProperties(property: "", values: []),
+                );
 
-              // Find the PropertyValue instance with the given color value
-              PropertyValue colorPropertyValue = colorProperty.values.firstWhere(
-                (value) => value.value == colors[index],
-                orElse: () => PropertyValue(value: "", id: -1),
-              );
+                // Find the PropertyValue instance with the given color value
+                PropertyValue colorPropertyValue =
+                    colorProperty.values.firstWhere(
+                  (value) => value.value == colors[index],
+                  orElse: () => PropertyValue(value: "", id: -1),
+                );
 
-              // Now, colorPropertyValue.id contains the ID associated with the color
-              int colorId = colorPropertyValue.id;
+                // Now, colorPropertyValue.id contains the ID associated with the color
+                int colorId = colorPropertyValue.id;
 
-              // Get the product variation using the property value id
-              productVariation = widget.product.variations.firstWhere(
-                (variation) => variation.id == colorId,
-              );
+                // Get the product variation using the property value id
+                productVariation = widget.product.variations.firstWhere(
+                  (variation) => variation.id == colorId,
+                );
 
-              print('NEW PRODUCT VARIATION: ${colorId}');
-              print(productVariation.productVariantImages[0]);
-            });
-          },
-          child: Stack(
-            children: [
-              Container(
-                height: 30,
-                width: 30,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 2.0,
+                print('NEW PRODUCT VARIATION: ${colorId}');
+                print(productVariation.productVariantImages[0]);
+              });
+            },
+            child: Stack(
+              children: [
+                Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 2.0,
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.all(2.5),
-                height: 25,
-                width: 25,
-                decoration: BoxDecoration(
-                  color: Color(int.parse(color, radix: 16)),
-                  shape: BoxShape.circle,
-                ),
-              )
-            ],
-          ),
-        );
-      },
-    ),
-  );
-}
+                Container(
+                  margin: EdgeInsets.all(2.5),
+                  height: 25,
+                  width: 25,
+                  decoration: BoxDecoration(
+                    color: Color(int.parse(color, radix: 16)),
+                    shape: BoxShape.circle,
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   Widget _displayDescriptionExpansionPanel() {
     return Theme(
@@ -412,5 +406,71 @@ Widget _buildColorRow(List<String> colors) {
     );
   }
 
-  _buildMaterialButtons() {}
+  _buildMaterialDetails() {
+    // adds all sizes in this variant to a list
+
+    // Assuming productVariation is your ProductVariation instance
+    List<String> materials = productVariation.productPropertiesValues
+        .where((propertyValue) => propertyValue.property == 'Materials')
+        .map((propertyValue) => propertyValue.value)
+        .toList();
+    productVariation.productPropertiesValues.forEach((propertyValue) {
+      print(
+          'Property: ${propertyValue.property}, Value: ${propertyValue.value}');
+    });
+
+// Now, sizes contains all size values for the 'Size' property
+
+    return Container(
+      height: 100,
+      
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(
+            'Select Material',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          Center(
+            child: Container(
+              height: 50,
+              child: ListView.builder(
+                
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: ((context, index) {
+                  return ElevatedButton(
+                    child: Text(materials[index]),
+                    onPressed: () {
+                      setState(() {
+                        AvailableProperties materialProperty =
+                            widget.product.availableProperties.firstWhere(
+                          (property) => property.property == "Materials",
+                          orElse: () =>
+                              AvailableProperties(property: "", values: []),
+                        );
+                        PropertyValue materialPropertyValue =
+                            materialProperty.values.firstWhere(
+                          (value) => value.value == materials[index],
+                          orElse: () => PropertyValue(
+                              value: "", id: -1), // Default values if not found
+                        );
+          
+                        int materialId = materialPropertyValue.id;
+          
+                        productVariation = widget.product.variations.firstWhere(
+                          (variation) => variation.id == materialId,
+                        );
+                      });
+                    },
+                  );
+                }),
+                itemCount: materials.length,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }
