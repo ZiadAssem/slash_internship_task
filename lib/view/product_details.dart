@@ -136,7 +136,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget _buildSizeDetails(Size) {
+  Widget _buildSizeDetails(List size) {
     return Container(
       height: 100,
       child: Column(
@@ -149,14 +149,47 @@ class _ProductDetailsState extends State<ProductDetails> {
               Text('Size Chart'),
             ],
           ),
-          ListView.builder(
-            itemBuilder: ((context, index) {
-              return ElevatedButton(
-                child: Text(Size[index]),
-                onPressed: () {},
-              );
-            }),
-            itemCount: Size.length,
+          Container(
+
+            height: 50,
+            child: ListView.builder(
+              
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: ((context, index) {
+                return ElevatedButton(
+                  child: Text(size[index]),
+                  onPressed: () {
+          
+                    setState(() {
+                      
+          
+                       AvailableProperties sizeProperty =
+                        widget.product.availableProperties.firstWhere(
+                      (property) => property.property == "Size",
+                      orElse: () => AvailableProperties(property: "", values: []),
+                    );
+                      PropertyValue sizePropertyValue =
+                        sizeProperty.values.firstWhere(
+                      (value) => value.value == size[index],
+                      orElse: () => PropertyValue(
+                          value: "", id: -1), // Default values if not found
+                    );
+          
+                                      int sizeId = sizePropertyValue.id;
+          
+                    productVariation = widget.product.variations.firstWhere(
+                      (variation) => variation.id == sizeId,
+                    );
+          
+          
+                    });
+          
+                  },
+                );
+              }),
+              itemCount: size.length,
+            ),
           )
         ],
       ),
