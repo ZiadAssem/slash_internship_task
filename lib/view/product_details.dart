@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:slash_internship_task/classes/available_properties_class.dart';
+import 'package:slash_internship_task/classes/product_property_and_value_class.dart';
 import 'package:slash_internship_task/classes/product_variation_class.dart';
 import 'package:slash_internship_task/view/reusable_widgets.dart';
 
@@ -73,7 +74,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ? _buildColorRow(_properties['Color']!)
               : Container(),
           _properties['Size'] != null
-              ? _buildSizeDetails(_properties['Size']!)
+              ? _buildSizeDetails()
               : Container(),
 
           _properties['Material'] != null
@@ -136,7 +137,21 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget _buildSizeDetails(List size) {
+  Widget _buildSizeDetails() {
+    // adds all sizes in this variant to a list
+   
+  // Assuming productVariation is your ProductVariation instance
+List<String> size = productVariation.productPropertiesValues
+    .where((propertyValue) => propertyValue.property == 'Size')
+    .map((propertyValue) => propertyValue.value)
+    .toList();
+    productVariation.productPropertiesValues.forEach((propertyValue) {
+  print('Property: ${propertyValue.property}, Value: ${propertyValue.value}');
+});
+
+// Now, sizes contains all size values for the 'Size' property
+print("Sizes: $size");
+
     return Container(
       height: 100,
       child: Column(
@@ -176,7 +191,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           value: "", id: -1), // Default values if not found
                     );
           
-                                      int sizeId = sizePropertyValue.id;
+                      int sizeId = sizePropertyValue.id;
           
                     productVariation = widget.product.variations.firstWhere(
                       (variation) => variation.id == sizeId,
@@ -292,83 +307,76 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget _buildColorRow(List<String> colors) {
-    print('Colors are $colors');
+Widget _buildColorRow(List<String> colors) {
+  colors = colors.toSet().toList();
+  print('Colors are $colors');
 
-    return Container(
-      alignment: AlignmentDirectional.center,
-      height: 50,
-      child: ListView.builder(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: colors.length,
-          itemBuilder: (context, index) {
-            String color = 'FF${colors[index]}';
-            color = color.replaceAll('#', '');
+  return Container(
+    alignment: AlignmentDirectional.center,
+    height: 50,
+    child: ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      itemCount: colors.length,
+      itemBuilder: (context, index) {
+        String color = 'FF${colors[index]}';
+        color = color.replaceAll('#', '');
 
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  AvailableProperties colorProperty =
-                      widget.product.availableProperties.firstWhere(
-                    (property) => property.property == "Color",
-                    orElse: () => AvailableProperties(property: "", values: []),
-                  );
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              AvailableProperties colorProperty = widget.product.availableProperties.firstWhere(
+                (property) => property.property == "Color",
+                orElse: () => AvailableProperties(property: "", values: []),
+              );
 
-// Find the PropertyValue instance with the given color value
-                  PropertyValue colorPropertyValue =
-                      colorProperty.values.firstWhere(
-                    (value) => value.value == colors[index],
-                    orElse: () => PropertyValue(
-                        value: "", id: -1), // Default values if not found
-                  );
+              // Find the PropertyValue instance with the given color value
+              PropertyValue colorPropertyValue = colorProperty.values.firstWhere(
+                (value) => value.value == colors[index],
+                orElse: () => PropertyValue(value: "", id: -1),
+              );
 
-// Now, colorPropertyValue.id contains the ID associated with the color
-                  int colorId = colorPropertyValue.id;
+              // Now, colorPropertyValue.id contains the ID associated with the color
+              int colorId = colorPropertyValue.id;
 
-                  // final ProductVariation = widget.product.variations.where((variation) =>
-                  //   variation.productPropertiesValues.where((element) => element.property=='Color' && element.value==colors[index]).);
+              // Get the product variation using the property value id
+              productVariation = widget.product.variations.firstWhere(
+                (variation) => variation.id == colorId,
+              );
 
-                  // get the prodcut variation using the property value id
-                  // productVariation = widget.product.variations.firstWhere(
-                  //     (variation) => variation.productPropertiesValues.any(
-                  //         (propertyValue) =>
-                  //             propertyValue.value == color[index]));
-                  productVariation = widget.product.variations.firstWhere(
-                    (variation) => variation.id == colorId,
-                  );
-                  print('NEW PRODUCT VARIATION: ${colorId}');
-                  print(productVariation.productVariantImages[0]);
-                });
-              },
-              child: Stack(
-                children: [
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2.0,
-                      ),
-                    ),
+              print('NEW PRODUCT VARIATION: ${colorId}');
+              print(productVariation.productVariantImages[0]);
+            });
+          },
+          child: Stack(
+            children: [
+              Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 2.0,
                   ),
-                  Container(
-                    margin: EdgeInsets.all(2.5),
-                    height: 25,
-                    width: 25,
-                    decoration: BoxDecoration(
-                      color: Color(int.parse(color, radix: 16)),
-                      shape: BoxShape.circle,
-                    ),
-                  )
-                ],
+                ),
               ),
-            );
-          }),
-    );
-  }
+              Container(
+                margin: EdgeInsets.all(2.5),
+                height: 25,
+                width: 25,
+                decoration: BoxDecoration(
+                  color: Color(int.parse(color, radix: 16)),
+                  shape: BoxShape.circle,
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    ),
+  );
+}
 
   Widget _displayDescriptionExpansionPanel() {
     return Theme(

@@ -381,9 +381,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
-      home:ProductDetails(product: Product.fromJson(json)),
+      home:
+      // ProductDetails(product: Product.fromJson(json)),
     
-            // ViewProducts(),
+             ViewProducts(),
     );
   }
 }
